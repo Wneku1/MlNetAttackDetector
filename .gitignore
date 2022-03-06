@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+
+# Build directory
+/build
+
+# VS code things
+/.vscode
+
+# Clangd things
+compile_commands.json
+/.cache
+
+# Ignore large datasets
+/datasets
