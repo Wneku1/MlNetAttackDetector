@@ -1,11 +1,19 @@
 #include <iostream>
-#include <boost/version.hpp>
+#include <mlpack/core.hpp>
+#include <string_view>
 
-int main()
+void loadAndPrintData( std::string_view pathToDataset )
 {
-	std::cout << "Using Boost " << BOOST_VERSION / 100000 << "." // major version
-			  << BOOST_VERSION / 100 % 1000 << "."				 // minor version
-			  << BOOST_VERSION % 100							 // patch level
-			  << std::endl;
+	using namespace mlpack;
+	arma::mat data;
+	data::Load( pathToDataset.data(), data, true );
+	data.print();
+}
+
+int main( int argc, char* argv[] )
+{
+	constexpr auto firstArgument{ 1 };
+	const auto pathToDataset{ argv[ firstArgument ] };
+	loadAndPrintData( pathToDataset );
 	return 0;
 }
