@@ -9,7 +9,7 @@ file( GLOB_RECURSE SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp )
 
-set( TARGET_LINK_LIBRARIES ${Boost_LIBRARIES} ${MLPACK_LIBRARY} )
+set( TARGET_LINK_LIBRARIES ${Boost_LIBRARIES} ${MLPACK_LIBRARY} ${MLPACK_LIBRARIES} armadillo )
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
 
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
@@ -21,7 +21,7 @@ set( Boost_USE_STATIC_LIBS ON )
 add_compile_definitions( BOOST_ERROR_CODE_HEADER_ONLY )
 find_package( Boost 1.69.0 )
 find_package( MLPACK REQUIRED )
-include_directories( ${Boost_INCLUDE_DIR} )
+include_directories( ${Boost_INCLUDE_DIR} ${MLPACK_INCLUDE_DIR} )
 link_directories( ${Boost_LIBRARY_DIR} )
 
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
