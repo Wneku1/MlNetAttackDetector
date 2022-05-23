@@ -31,7 +31,7 @@ void predict( const RandomForest< GiniGain, RandomDimensionSelect >& rf, const m
 	Row< size_t > trainPredictions;
 	rf.Classify( data, trainPredictions );
 	const size_t correctTrain = arma::accu( trainPredictions == label );
-	cout << "Accuracy: " << ( double( correctTrain ) / double( label.n_elem ) ) << "\n";
+	cout << "accuracy: " << ( double( correctTrain ) / double( label.n_elem ) ) << "\n";
 }
 
 int main( int argc, char* argv[] )
@@ -55,6 +55,13 @@ int main( int argc, char* argv[] )
 
 	cout << "\nTest ";
 	predict( rf, X_train, y_trainToModel );
+
+	mat allDataset{ loadData( "allDatasetToTest.csv" ) };
+	mat allLabels{ loadData( "allDatasetLabels.csv" ) };
+	Row< size_t > labelsAllDataset{ convertToRow( allLabels ) };
+
+	cout << "\nAll dataset ";
+	predict( rf, allDataset, labelsAllDataset );
 
 	return 0;
 }
