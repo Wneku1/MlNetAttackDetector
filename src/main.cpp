@@ -13,49 +13,48 @@ using namespace mlpack;
 using namespace mlpack::tree;
 using namespace mlpack::cv;
 
+mat loadData( const std::string& path )
+{
+	mat data;
+	bool isLoaded = mlpack::data::Load( path, data );
+	assert( isLoaded );
+	return data;
+}
+
+Row< size_t > convertToRow( mat data )
+{
+	return conv_to< Row< size_t > >::from( data.row( data.n_rows - 1 ) );
+}
+
+void predict( const RandomForest< GiniGain, RandomDimensionSelect >& rf, const mat& data, const Row< size_t >& label )
+{
+	Row< size_t > trainPredictions;
+	rf.Classify( data, trainPredictions );
+	const size_t correctTrain = arma::accu( trainPredictions == label );
+	cout << "Accuracy: " << ( double( correctTrain ) / double( label.n_elem ) ) << "\n";
+}
+
 int main( int argc, char* argv[] )
 {
-	mat X_train;
-	bool X_trainLoaded = mlpack::data::Load( "X_train.csv", X_train );
-	if( !X_trainLoaded )
-	{
-		return -1;
-	}
+	mat X_train{ loadData( "X_train.csv" ) };
+	mat X_test{ loadData( "X_test.csv" ) };
+	mat y_test{ loadData( "y_test.csv" ) };
+	mat y_train{ loadData( "y_train.csv" ) };
 
-	mat X_test;
-	bool X_testLoaded = mlpack::data::Load( "X_test.csv", X_test );
-	if( !X_testLoaded )
-	{
-		return -1;
-	}
+	Row< size_t > y_trainToModel{ convertToRow( y_train ) };
+	Row< size_t > y_testToModel{ convertToRow( y_test ) };
 
-	mat y_test;
-	bool y_testLoaded = mlpack::data::Load( "y_test.csv", y_test );
-	if( !y_testLoaded )
-	{
-		return -1;
-	}
+	constexpr size_t numClasses{ 2U };
+	constexpr size_t minimumLeafSize{ 5U };
+	constexpr size_t numTrees{ 10U };
+	RandomForest< GiniGain, RandomDimensionSelect > rf{ RandomForest< GiniGain, RandomDimensionSelect >(
+		X_train, y_trainToModel, numClasses, numTrees, minimumLeafSize ) };
 
-	mat y_train;
-	bool y_trainLoaded = mlpack::data::Load( "y_train.csv", y_train );
-	if( !y_trainLoaded )
-	{
-		return -1;
-	}
+	cout << "\nTraining ";
+	predict( rf, X_train, y_trainToModel );
 
-	Row< size_t > labels;
-	labels = conv_to< Row< size_t > >::from( y_train.row( y_train.n_rows - 1 ) );
-
-	const size_t numClasses		 = 2;
-	const size_t minimumLeafSize = 5;
-	const size_t numTrees		 = 10;
-	RandomForest< GiniGain, RandomDimensionSelect > rf;
-	rf = RandomForest< GiniGain, RandomDimensionSelect >( X_train, labels, numClasses, numTrees, minimumLeafSize );
-
-	Row< size_t > predictions;
-	rf.Classify( X_train, predictions );
-	const size_t correct = arma::accu( predictions == labels );
-	cout << "\nTraining Accuracy: " << ( double( correct ) / double( labels.n_elem ) ) << "\n";
+	cout << "\nTest ";
+	predict( rf, X_train, y_trainToModel );
 
 	return 0;
 }
