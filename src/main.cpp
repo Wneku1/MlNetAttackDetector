@@ -15,36 +15,47 @@ using namespace mlpack::cv;
 
 int main( int argc, char* argv[] )
 {
-	constexpr auto firstArgument{ 1 };
-	mat dataset;
-	bool loaded = mlpack::data::Load( argv[ firstArgument ], dataset );
-	if( !loaded )
+	mat X_train;
+	bool X_trainLoaded = mlpack::data::Load( "X_train.csv", X_train );
+	if( !X_trainLoaded )
 	{
 		return -1;
 	}
 
-	// Row< size_t > labels;
-	// labels = conv_to< Row< size_t > >::from( dataset.row( dataset.n_rows - 1 )
-	// );
-	dataset.print();
-	// Row< size_t > labels = conv_to< Row< size_t > >::from( dataset.row(
-	// dataset.n_rows - 1 ) ); std::cout << labels.at( 0 ); dataset.print();
-	// dataset.shed_row( dataset.n_rows - 1 );
-	// dataset.save( "qwe.csv", auto_detect );
-	// dataset.shed_row( dataset.n_rows - 1 );
+	mat X_test;
+	bool X_testLoaded = mlpack::data::Load( "X_test.csv", X_test );
+	if( !X_testLoaded )
+	{
+		return -1;
+	}
 
-	// const size_t numClasses		 = 2;
-	// const size_t minimumLeafSize = 5;
-	// const size_t numTrees		 = 10;
-	// RandomForest< GiniGain, RandomDimensionSelect > rf;
-	// rf = RandomForest< GiniGain, RandomDimensionSelect >( dataset, labels,
-	// numClasses, numTrees, minimumLeafSize );
+	mat y_test;
+	bool y_testLoaded = mlpack::data::Load( "y_test.csv", y_test );
+	if( !y_testLoaded )
+	{
+		return -1;
+	}
 
-	// Row< size_t > predictions;
-	// rf.Classify( dataset, predictions );
-	// const size_t correct = arma::accu( predictions == labels );
-	// cout << "\nTraining Accuracy: " << ( double( correct ) / double(
-	// labels.n_elem ) ) << "\n";
+	mat y_train;
+	bool y_trainLoaded = mlpack::data::Load( "y_train.csv", y_train );
+	if( !y_trainLoaded )
+	{
+		return -1;
+	}
+
+	Row< size_t > labels;
+	labels = conv_to< Row< size_t > >::from( y_train.row( y_train.n_rows - 1 ) );
+
+	const size_t numClasses		 = 2;
+	const size_t minimumLeafSize = 5;
+	const size_t numTrees		 = 10;
+	RandomForest< GiniGain, RandomDimensionSelect > rf;
+	rf = RandomForest< GiniGain, RandomDimensionSelect >( X_train, labels, numClasses, numTrees, minimumLeafSize );
+
+	Row< size_t > predictions;
+	rf.Classify( X_train, predictions );
+	const size_t correct = arma::accu( predictions == labels );
+	cout << "\nTraining Accuracy: " << ( double( correct ) / double( labels.n_elem ) ) << "\n";
 
 	return 0;
 }
