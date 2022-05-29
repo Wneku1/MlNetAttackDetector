@@ -32,14 +32,14 @@
 *.app
 
 # Build directory
-/build
+build/
 
 # VS code things
-/.vscode
+.vscode
 
 # Clangd things
 compile_commands.json
-/.cache
+.cache
 
 # Ignore large datasets
-/datasets
+datasets/
