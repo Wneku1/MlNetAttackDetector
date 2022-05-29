@@ -31,15 +31,20 @@
 *.out
 *.app
 
+# User spesific settings
+CMakeUserPresets.json
+
 # Build directory
 build/
+cmake-build-*/
 
 # VS code things
-.vscode
+.vscode/
+.vs/
 
 # Clangd things
 compile_commands.json
-.cache
+.cache/
 
 # Ignore large datasets
 datasets/
