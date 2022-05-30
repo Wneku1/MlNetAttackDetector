@@ -21,7 +21,7 @@ include (${CMAKE_MODULE_PATH}/create_options.cmake)
 include (${CMAKE_MODULE_PATH}/configure_options.cmake)
 
 set (CPACK_GENERATOR TGZ)
-set (CPACK_PACKAGE_NAME "AttackDetector")
+set (CPACK_PACKAGE_NAME "Defender")
 set (CPACK_PACKAGE_VENDOR "KosciejoAndSebastiano")
 set (CPACK_PACKAGE_VERSION_MAJOR "${EXTRA_VERSION_MAJOR}")
 set (CPACK_PACKAGE_VERSION_MINOR "${EXTRA_VERSION_MINOR}")

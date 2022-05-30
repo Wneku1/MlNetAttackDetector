@@ -1,5 +1,5 @@
 cmake_minimum_required ( VERSION 3.4.3 )
-project ( detector CXX )
+project ( defender CXX )
 
 set (CMAKE_CXX_STANDARD 20)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -9,31 +9,29 @@ include ( FindPkgConfig )
 pkg_search_module ( SNORT3 REQUIRED snort>=3 )
 
 add_library (
-    detector MODULE
+    defender MODULE
     api_conf.cpp
     config.hpp
     config.cpp
-	inspector.hpp
+    inspector.hpp
     inspector.cpp
     module.hpp
     module.cpp
-    param_default_value.hpp
-    parameters_name.hpp
 )
 
 set_target_properties (
-    detector
+    defender
     PROPERTIES
         PREFIX ""
 )
 
 target_include_directories (
-    detector PUBLIC
+    defender PUBLIC
     ${SNORT3_INCLUDE_DIRS}
 )
 
 install (
-    TARGETS detector
+    TARGETS defender
     LIBRARY
         DESTINATION "${INSPECTOR_INSTALL_PATH}"
 )
