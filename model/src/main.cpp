@@ -44,8 +44,11 @@ int main(int argc, char *argv[])
   constexpr size_t numClasses{ 2U };
   constexpr size_t minimumLeafSize{ 5U };
   constexpr size_t numTrees{ 10U };
-  RandomForest<GiniGain, RandomDimensionSelect> rf{ RandomForest<GiniGain, RandomDimensionSelect>(
-    X_train, y_trainToModel, numClasses, numTrees, minimumLeafSize) };
+  // RandomForest<GiniGain, RandomDimensionSelect> rf{ RandomForest<GiniGain, RandomDimensionSelect>(
+  //   X_train, y_trainToModel, numClasses, numTrees, minimumLeafSize) };
+  RandomForest<GiniGain, RandomDimensionSelect> rf;
+
+  mlpack::data::Load("mymodel.xml", "model", rf);
 
   cout << "\nTraining ";
   predict(rf, X_train, y_trainToModel);
@@ -53,12 +56,15 @@ int main(int argc, char *argv[])
   cout << "\nTest ";
   predict(rf, X_train, y_trainToModel);
 
-  mat allDataset{ loadData("allDatasetToTest.csv") };
-  mat allLabels{ loadData("allDatasetLabels.csv") };
-  Row<size_t> labelsAllDataset{ convertToRow(allLabels) };
+  // mlpack::data::Save("mymodel.xml", "model", rf, false);
 
-  cout << "\nAll dataset ";
-  predict(rf, allDataset, labelsAllDataset);
+
+  // mat allDataset{ loadData("allDatasetToTest.csv") };
+  // mat allLabels{ loadData("allDatasetLabels.csv") };
+  // Row<size_t> labelsAllDataset{ convertToRow(allLabels) };
+
+  // cout << "\nAll dataset ";
+  // predict(rf, allDataset, labelsAllDataset);
 
   return 0;
 }

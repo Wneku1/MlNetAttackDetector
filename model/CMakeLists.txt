@@ -4,6 +4,8 @@ project( AttackDetector LANGUAGES CXX )
 
 set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
+set( CMAKE_CXX_FLAGS "-lboost_serialization" )
+
 
 file( GLOB_RECURSE SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp 
@@ -16,9 +18,12 @@ set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 set( CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo;Release" )
 
 set( Boost_USE_STATIC_LIBS ON )
+set( Boost_USE_MULTITHREADED ON )
 add_compile_definitions( BOOST_ERROR_CODE_HEADER_ONLY )
-find_package( Boost 1.69.0 )
+
+find_package( Boost 1.69.0 COMPONENTS serialization )
 find_package( MLPACK REQUIRED )
+
 include_directories( ${Boost_INCLUDE_DIR} ${MLPACK_INCLUDE_DIR} )
 link_directories( ${Boost_LIBRARY_DIR} )
 
