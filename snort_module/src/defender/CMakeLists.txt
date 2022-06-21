@@ -17,6 +17,8 @@ add_library (
     inspector.cpp
     module.hpp
     module.cpp
+    ../extractor/features.hpp
+    ../extractor/features.cpp
 )
 
 set_target_properties (

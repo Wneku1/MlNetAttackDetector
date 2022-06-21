@@ -1,4 +1,3 @@
-set (INSPECTOR_INSTALL_PATH "${PLUGIN_INSTALL_PATH}/inspectors")
+set(INSPECTOR_INSTALL_PATH "${PLUGIN_INSTALL_PATH}/inspectors")
 
-add_subdirectory ( defender )
-
+add_subdirectory(defender)
