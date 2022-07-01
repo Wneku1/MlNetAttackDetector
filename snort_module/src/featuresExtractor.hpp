@@ -1,5 +1,6 @@
 #pragma once
 
+#include "snort/protocols/packet.h"
 #include <cstdint>
 #include <memory>
 #include <sys/time.h>
@@ -11,29 +12,11 @@ public:
   explicit FeaturesExtractor();
   ~FeaturesExtractor();
 
-  void setStartTime(timeval TimeStamp);
-  timeval getStartTime();
+  void updatePayloadSize(uint16_t dsize);
 
-  timeval getFlowDuration(timeval pktTimeStamp);
-
-  int getPayloadSize();
-  void setPayloadSize(uint16_t dsize);
-
-  float getAvgPacketLen();
-  void setAvgPacketLen(uint32_t pktLen, uint32_t total_packets);
-
-  void setPktLenStd(const timeval flowLength);
+  void updateAvgPacketLen(uint32_t pktLen, uint32_t total_packets);
 
 private:
-  void setFirstFlowDuration();
-  double standardDev(std::vector<double> const &func);
-
-  timeval startTime;
-  timeval flowDuration;
-
-  float avgPktSlen;
-  uint16_t payloadSize;
-
-  // Standard deviation
-  std::vector<timeval> flowLengths;
+  float m_avgPktSlen;
+  uint16_t m_payloadSize;
 };

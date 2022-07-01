@@ -3,6 +3,7 @@
 #include "module.hpp"
 #include <memory>
 
+#include "featuresExtractor.hpp"
 #include <detection/detection_engine.h>
 #include <snort/framework/counts.h>
 
@@ -27,6 +28,7 @@ private:
   PegCount getPacketsCount() const;
   bool validate(const snort::Packet *packet) const;
 
+  FeaturesExtractor m_featuresExtractor;
   std::shared_ptr<Config> m_config;
   Defender::ModuleConf *m_module{ nullptr };
   bool m_initStaus{ false };

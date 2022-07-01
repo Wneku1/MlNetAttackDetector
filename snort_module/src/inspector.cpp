@@ -2,7 +2,6 @@
 #include "config.hpp"
 #include "module.hpp"
 
-#include "featuresExtractor.hpp"
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -59,23 +58,20 @@ void InspectorConf::eval(Packet *packet)
 {
   if (!m_initStaus) { m_initStaus = true; }
 
-  auto features = std::make_shared<FeaturesExtractor>();
   m_module->incrementPacketCounter();
 
   if (!validate(packet)) { return; }
 
-  const auto &packetsCount{ getPacketsCount() };
-  // features->setFlowDuration(packet->pkth->ts);// fl_dur
-  features->setPayloadSize(packet->dsize);// dsize
-  features->setAvgPacketLen(packet->pktlen, packetsCount);// pkt_size_avg
+  m_featuresExtractor.updatePayloadSize(packet->dsize);
+  m_featuresExtractor.updateAvgPacketLen(packet->pktlen, getPacketsCount());
 
-  const auto clientIp{ getClientIp(packet) };
-  const auto serverIp{ getServerIp(packet) };
-  const auto ipv4SrcValue{ packet->ptrs.ip_api.get_src()->get_ip4_value() };
-  const auto ipv4DstValue{ packet->ptrs.ip_api.get_dst()->get_ip4_value() };
-  // const auto timeStamp{ features->getFlowDurationUs() };// to jest czas od rozpoczęcia analizy
-  const auto payloadSize{ features->getPayloadSize() };
-  const auto avgPktLen{ features->getAvgPacketLen() };
+  // const auto clientIp{ getClientIp(packet) };
+  // const auto serverIp{ getServerIp(packet) };
+  // const auto ipv4SrcValue{ packet->ptrs.ip_api.get_src()->get_ip4_value() };
+  // const auto ipv4DstValue{ packet->ptrs.ip_api.get_dst()->get_ip4_value() };
+  // const auto timeStamp{ m_featuresExtractor->getFlowDurationUs() };// to jest czas od rozpoczęcia analizy
+  // const auto payloadSize{ m_featuresExtractor.getPayloadSize() };
+  // const auto avgPktLen{ m_featuresExtractor.getAvgPacketLen() };
 
   // LogMessage( "[ClientIP]%s\n", clientIp.c_str() );
   // LogMessage( "[ServerIP]%s\n", serverIp.c_str() );
@@ -104,7 +100,7 @@ void InspectorConf::eval(Packet *packet)
 
   // LogMessage( "[IPv4SrcValue]%d\n", ipv4SrcValue );
   // LogMessage( "[IPv4DstValue]%d\n", ipv4DstValue );
-  // LogMessage( "[FeaturesTimeStamp]%ld\n", timeStamp ); // fl_dur
-  // LogMessage( "[FeaturesPayloadSize]%d\n", payloadSize ); // dsize
-  // LogMessage( "[FeaturesAvgPktLen]%f\n", avgPktLen ); // pkt_size_avg
+  // LogMessage( "[m_featuresExtractorTimeStamp]%ld\n", timeStamp ); // fl_dur
+  // LogMessage( "[m_featuresExtractorPayloadSize]%d\n", payloadSize ); // dsize
+  // LogMessage( "[m_featuresExtractorAvgPktLen]%f\n", avgPktLen ); // pkt_size_avg
 }
