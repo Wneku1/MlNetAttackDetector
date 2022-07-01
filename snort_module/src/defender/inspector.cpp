@@ -59,13 +59,13 @@ void InspectorConf::eval(Packet *packet)
 {
   if (!m_initStaus) { m_initStaus = true; }
 
-  auto features = std::make_shared<Extractor::Features>();
+  auto features = std::make_shared<Extractor::Features>();// tragedia
   m_module->incrementPacketCounter();
 
   if (!validate(packet)) { return; }
 
   const auto &packetsCount{ getPacketsCount() };
-  features->setFlowDuration(packet->pkth->ts);// fl_dur
+  // features->setFlowDuration(packet->pkth->ts);// fl_dur
   features->setPayloadSize(packet->dsize);// dsize
   features->setAvgPacketLen(packet->pktlen, packetsCount);// pkt_size_avg
 
@@ -73,7 +73,7 @@ void InspectorConf::eval(Packet *packet)
   const auto serverIp{ getServerIp(packet) };
   const auto ipv4SrcValue{ packet->ptrs.ip_api.get_src()->get_ip4_value() };
   const auto ipv4DstValue{ packet->ptrs.ip_api.get_dst()->get_ip4_value() };
-  const auto timeStamp{ features->getFlowDurationUs() };// to jest czas od rozpoczęcia analizy
+  // const auto timeStamp{ features->getFlowDurationUs() };// to jest czas od rozpoczęcia analizy
   const auto payloadSize{ features->getPayloadSize() };
   const auto avgPktLen{ features->getAvgPacketLen() };
 
