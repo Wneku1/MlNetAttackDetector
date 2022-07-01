@@ -2,7 +2,7 @@
 #include "config.hpp"
 #include "module.hpp"
 
-#include "../extractor/features.hpp"
+#include "featuresExtractor.hpp"
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -59,7 +59,7 @@ void InspectorConf::eval(Packet *packet)
 {
   if (!m_initStaus) { m_initStaus = true; }
 
-  auto features = std::make_shared<Extractor::Features>();// tragedia
+  auto features = std::make_shared<FeaturesExtractor>();
   m_module->incrementPacketCounter();
 
   if (!validate(packet)) { return; }

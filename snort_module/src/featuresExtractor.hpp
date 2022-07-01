@@ -5,20 +5,23 @@
 #include <sys/time.h>
 #include <vector>
 
-namespace Extractor {
-class Features final
+class FeaturesExtractor final
 {
 public:
-  explicit Features();
-  ~Features();
+  explicit FeaturesExtractor();
+  ~FeaturesExtractor();
 
   void setStartTime(timeval TimeStamp);
   timeval getStartTime();
+
   timeval getFlowDuration(timeval pktTimeStamp);
+
   int getPayloadSize();
   void setPayloadSize(uint16_t dsize);
+
   float getAvgPacketLen();
   void setAvgPacketLen(uint32_t pktLen, uint32_t total_packets);
+
   void setPktLenStd(const timeval flowLength);
 
 private:
@@ -34,5 +37,3 @@ private:
   // Standard deviation
   std::vector<timeval> flowLengths;
 };
-
-}// namespace Extractor
