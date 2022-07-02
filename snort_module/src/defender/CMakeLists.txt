@@ -57,4 +57,4 @@ install (
         DESTINATION "${INSPECTOR_INSTALL_PATH}"
 )
 
-target_link_libraries( ${CMAKE_PROJECT_NAME} PRIVATE ${TARGET_LINK_LIBRARIES} )
+target_link_libraries( ${TARGET_NAME} PUBLIC ${TARGET_LINK_LIBRARIES} )
