@@ -4,7 +4,7 @@ project( AttackDetector LANGUAGES CXX )
 
 set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
-set( CMAKE_CXX_FLAGS "-lboost_serialization" )
+set( CMAKE_CXX_FLAGS "-fopenmp -lboost_serialization" )
 
 
 file( GLOB_RECURSE SRC

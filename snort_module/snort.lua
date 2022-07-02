@@ -62,7 +62,7 @@ dns = { }
 --     entropy = 222.0,
 --     packet_value = 112.0,
 -- }
-detector = { start = 22.0 }
+defender = { }
 
 -- see file_magic.lua for file id rules
 file_id = { file_rules = file_magic }
