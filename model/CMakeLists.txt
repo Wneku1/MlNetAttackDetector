@@ -21,7 +21,7 @@ set( Boost_USE_STATIC_LIBS ON )
 set( Boost_USE_MULTITHREADED ON )
 add_compile_definitions( BOOST_ERROR_CODE_HEADER_ONLY )
 
-find_package( Boost 1.69.0 COMPONENTS serialization )
+find_package( Boost 1.79.0 REQUIRED COMPONENTS filesystem serialization wserialization )
 find_package( MLPACK REQUIRED )
 
 include_directories( ${Boost_INCLUDE_DIR} ${MLPACK_INCLUDE_DIR} )
