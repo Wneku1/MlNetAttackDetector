@@ -21,6 +21,12 @@ include(GNUInstallDirs)
 include(${CMAKE_MODULE_PATH}/create_options.cmake)
 include(${CMAKE_MODULE_PATH}/configure_options.cmake)
 
+find_package( Boost 1.79.0 REQUIRED COMPONENTS filesystem serialization wserialization thread )
+find_package( MLPACK REQUIRED )
+
+include_directories( ${Boost_INCLUDE_DIR} ${MLPACK_INCLUDE_DIR} )
+link_directories( ${Boost_LIBRARY_DIR} )
+
 set(CPACK_GENERATOR TGZ)
 set(CPACK_PACKAGE_NAME "NetworkDefender")
 set(CPACK_PACKAGE_VENDOR "KosciejoAndSebastiano")
@@ -41,7 +47,7 @@ set(C_FLAGS "" CACHE STRING "")
 set(CXX_FLAGS "" CACHE STRING "")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_FLAGS}" CACHE STRING "" FORCE)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAGS} -fopenmp -lboost_serialization" CACHE STRING "" FORCE)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAGS} -fopenmp -lboost_serialization -lboost_system" CACHE STRING "" FORCE)
 
 execute_process(
     COMMAND pkg-config --variable=cpp_opts snort
