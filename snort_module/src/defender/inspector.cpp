@@ -59,15 +59,19 @@ void InspectorConf::eval(Packet *packet)
   if (!m_initStaus) {
     LogMessage("Hola amigos\n");
     m_model.load();
+    m_model.predict(m_featuresExtractor.getDataToPredict());
+
     m_initStaus = true;
   }
+
+  return;
 
   m_module->incrementPacketCounter();
 
   if (!validate(packet)) { return; }
 
-  m_featuresExtractor.updatePayloadSize(packet->dsize);
-  m_featuresExtractor.updateAvgPacketLen(packet->pktlen, getPacketsCount());
+  // m_featuresExtractor.updatePayloadSize(packet->dsize);
+  // m_featuresExtractor.updateAvgPacketLen(packet->pktlen, getPacketsCount());
 
   // const auto clientIp{ getClientIp(packet) };
   // const auto serverIp{ getServerIp(packet) };

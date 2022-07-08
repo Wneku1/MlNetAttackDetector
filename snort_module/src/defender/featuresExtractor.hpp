@@ -1,22 +1,28 @@
 #pragma once
-
-#include "snort/protocols/packet.h"
-#include <cstdint>
-#include <memory>
-#include <sys/time.h>
-#include <vector>
+#include <mlpack/core/math/ccov.hpp>
 
 class FeaturesExtractor final
 {
 public:
   explicit FeaturesExtractor();
   ~FeaturesExtractor();
-
-  void updatePayloadSize(uint16_t dsize);
-
-  void updateAvgPacketLen(uint32_t pktLen, uint32_t total_packets);
+  arma::mat getDataToPredict();
 
 private:
-  float m_avgPktSlen;
-  uint16_t m_payloadSize;
+  double m_flow_duration{};
+  double m_tot_fwd_pkts{};
+  double m_tot_bwd_pkts{};
+  double m_tot_len_fwd_pkts{};
+  double m_tot_len_bwd_pkts{};
+  double m_fwd_pkt_len_mean{};
+  double m_bwd_pkt_len_mean{};
+  double m_flow_byts{};
+  double m_fwd_iat_mean{};
+  double m_bwd_iat_mean{};
+  double m_pkt_len_mean{};
+  double m_pkt_size_avg{};
+  double m_fwd_byts_avg{};
+  double m_bwd_byts_avg{};
+  double m_active_mean{};
+  double m_idle_mean{};
 };

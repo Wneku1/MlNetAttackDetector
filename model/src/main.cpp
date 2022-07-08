@@ -66,5 +66,17 @@ int main(int argc, char *argv[])
   // cout << "\nAll dataset ";
   // predict(rf, allDataset, labelsAllDataset);
 
+  //   Row<size_t> predictions;
+  // rf.Classify(dataset, predictions);
+  // const size_t correct = arma::accu(predictions == labels);
+  // cout << "\nTraining Accuracy: " << (double(correct) / double(labels.n_elem));
+
+  // mat sample("2 12 2 13 1 2 2 1 3 24 3 1 1 1 1 1 0 1 0 1 0 0 0");
+  // mat probabilities;
+  // rf.Classify(sample, predictions, probabilities);
+  // u64 result = predictions.at(0);
+  // cout << "\nClassification result: " << result << " , Probabilities: " <<
+  //     probabilities.at(0) << "/" << probabilities.at(1);
+
   return 0;
 }

@@ -1,23 +1,26 @@
 #include "featuresExtractor.hpp"
-#include <numeric>
+
 
 FeaturesExtractor::FeaturesExtractor() = default;
 
 FeaturesExtractor::~FeaturesExtractor() = default;
 
-void FeaturesExtractor::updatePayloadSize(uint16_t dsize)
+arma::mat FeaturesExtractor::getDataToPredict()
 {
-  assert(dsize > 0U);
-  m_payloadSize = dsize;
-}
-
-void FeaturesExtractor::updateAvgPacketLen(uint32_t pktLen, uint32_t total_packets)
-{
-  // Explain https://math.stackexchange.com/questions/106313/regular-average-calculated-accumulatively
-  assert(total_packets > 0U);
-  float newAvgPacketLen = m_avgPktSlen * (total_packets - 1U);// if(total_packets == 1) ????
-  newAvgPacketLen += pktLen;
-  newAvgPacketLen /= total_packets;
-
-  m_avgPktSlen = newAvgPacketLen;
+  return { m_flow_duration,
+    m_tot_fwd_pkts,
+    m_tot_bwd_pkts,
+    m_tot_len_fwd_pkts,
+    m_tot_len_bwd_pkts,
+    m_fwd_pkt_len_mean,
+    m_bwd_pkt_len_mean,
+    m_flow_byts,
+    m_fwd_iat_mean,
+    m_bwd_iat_mean,
+    m_pkt_len_mean,
+    m_pkt_size_avg,
+    m_fwd_byts_avg,
+    m_bwd_byts_avg,
+    m_active_mean,
+    m_idle_mean };
 }

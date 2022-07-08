@@ -13,3 +13,15 @@ Model::~Model() = default;
 static RandomForest<GiniGain, RandomDimensionSelect> m_randomForest;
 
 void Model::load() { data::Load("model.xml", "model", m_randomForest); }
+
+void Model::predict(const arma::mat &data)
+{
+  using namespace arma;
+
+  Row<size_t> predictions;
+  mat probabilities;
+  m_randomForest.Classify(data, predictions, probabilities);
+  u64 result = predictions.at(0);
+  cout << "\nClassification result: " << result << " , Probabilities: " << probabilities.at(0) << "/"
+       << probabilities.at(1);
+}
