@@ -21,7 +21,7 @@ void Model::predict(const arma::mat &data)
   Row<size_t> predictions;
   mat probabilities;
   m_randomForest.Classify(data, predictions, probabilities);
-  u64 result = predictions.at(0);
-  cout << "\nClassification result: " << result << " , Probabilities: " << probabilities.at(0) << "/"
-       << probabilities.at(1);
+  const auto result = predictions.at(0);
+  std::cout << "\nClassification result: " << result << " , Probabilities: " << probabilities.at(0) << "/"
+       << probabilities.at(1) << std::endl;;
 }

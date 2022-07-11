@@ -64,8 +64,6 @@ void InspectorConf::eval(Packet *packet)
     m_initStaus = true;
   }
 
-  return;
-
   m_module->incrementPacketCounter();
 
   if (!validate(packet)) { return; }
