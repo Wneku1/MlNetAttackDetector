@@ -88,21 +88,21 @@ void InspectorConf::eval(Packet *packet)
   // LogMessage( "[FlowPktsClient]%ld\n", packet->flow->flowstats.client_pkts );
 
   // https://ask.wireshark.org/question/969/what-is-epoch-time-in-wireshark/
-  LogMessage("[FlowStatTimeUsec]%ld.%ld\n",
-    packet->flow->flowstats.start_time.tv_sec,
-    packet->flow->flowstats.start_time.tv_usec);// Czyli to jest czas od 01.01.1970
+  // LogMessage("[FlowStatTimeUsec]%ld.%ld\n",
+  //   packet->flow->flowstats.start_time.tv_sec,
+  //   packet->flow->flowstats.start_time.tv_usec);// Czyli to jest czas od 01.01.1970
 
   // if( packet->flow->flowstats.start_time.tv_sec != 1654630708 )
   // {
   // 	LogMessage( "[DifferenceTime][FlowStatTimeSec]%ld\n", packet->flow->flowstats.start_time.tv_usec );
   // }
 
-  if (packet->pkth->pktlen != packet->pktlen) {
-    // Czyli to jest to samo w sumie.
-    LogMessage("[Difference]");
-    LogMessage("[PacketLen]%d\n", packet->pktlen);
-    LogMessage("[PacketPkthLen]%d\n", packet->pkth->pktlen);
-  }
+  // if (packet->pkth->pktlen != packet->pktlen) {
+  //   // Czyli to jest to samo w sumie.
+  //   LogMessage("[Difference]");
+  //   LogMessage("[PacketLen]%d\n", packet->pktlen);
+  //   LogMessage("[PacketPkthLen]%d\n", packet->pkth->pktlen);
+  // }
 
   // LogMessage( "[IPv4SrcValue]%d\n", ipv4SrcValue );
   // LogMessage( "[IPv4DstValue]%d\n", ipv4DstValue );
