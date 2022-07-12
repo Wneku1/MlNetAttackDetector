@@ -1,7 +1,7 @@
 cmake_minimum_required ( VERSION 3.4.3 )
 project ( defender CXX )
 
-set (TARGET_NAME ${CMAKE_PROJECT_NAME})
+set ( TARGET_NAME "defender" )
 
 set (CMAKE_CXX_STANDARD 20)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
