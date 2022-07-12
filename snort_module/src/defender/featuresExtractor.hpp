@@ -25,4 +25,5 @@ private:
   double m_bwd_byts_avg{};
   double m_active_mean{};
   double m_idle_mean{};
+  double m_flow_iat_mean{};
 };

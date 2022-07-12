@@ -54,6 +54,7 @@ arma::mat FeaturesExtractor::getDataToPredict()
     m_flow_byts,
     m_fwd_iat_mean,
     m_bwd_iat_mean,
+    m_flow_iat_mean,
     m_pkt_len_mean,
     m_pkt_size_avg,
     m_fwd_byts_avg,
