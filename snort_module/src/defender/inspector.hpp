@@ -22,6 +22,7 @@ public:
   void eval(snort::Packet *) override;
 
 private:
+  void printSomeInfo(snort::Packet *packet);
   void showConfig() const;
 
   std::string getClientIp(const snort::Packet *packet) const;

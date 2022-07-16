@@ -1,6 +1,10 @@
 #pragma once
 #include <mlpack/core/math/ccov.hpp>
 
+namespace snort {
+struct FlowStats;
+}
+
 class FeaturesExtractor final
 {
 public:
@@ -8,7 +12,14 @@ public:
   ~FeaturesExtractor();
   arma::mat getDataToPredict();
 
+  void updateFromFlowStats(const snort::FlowStats &);
+
 private:
+  double calcBytsAvg(const unsigned long &bytes, const unsigned long &packets);
+  void updateFlowDuration(const snort::FlowStats &);
+
+  // forward (source to destination)
+  // backward (destination to source)
   double m_flow_duration{};
   double m_tot_fwd_pkts{};
   double m_tot_bwd_pkts{};

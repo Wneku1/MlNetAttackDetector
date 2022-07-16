@@ -54,19 +54,43 @@ std::string InspectorConf::getServerIp(const Packet *packet) const
 
 PegCount InspectorConf::getPacketsCount() const { return *m_module->get_counts(); }
 
+void InspectorConf::printSomeInfo(Packet *packet)
+{
+  const auto clientIp{ getClientIp(packet) };
+  const auto serverIp{ getServerIp(packet) };
+  const auto ipv4SrcValue{ packet->ptrs.ip_api.get_src()->get_ip4_value() };
+  const auto ipv4DstValue{ packet->ptrs.ip_api.get_dst()->get_ip4_value() };
+  const auto clientPort{ packet->flow->client_port };
+  const auto serverPort{ packet->flow->server_port };
+
+  LogMessage("[Client IP]%s\n", clientIp.c_str());
+  LogMessage("[Server IP]%s\n", serverIp.c_str());
+  LogMessage("[IPv4 source]%d\n", ipv4SrcValue);
+  LogMessage("[IPv4 destination]%d\n", ipv4DstValue);
+  LogMessage("[Client port]%d\n", clientPort);
+  LogMessage("[Server port]%d\n", serverPort);
+}
+
 void InspectorConf::eval(Packet *packet)
 {
   if (!m_initStaus) {
     LogMessage("Hola amigos\n");
     m_model.load();
-    m_model.predict(m_featuresExtractor.getDataToPredict());
-
     m_initStaus = true;
   }
 
   m_module->incrementPacketCounter();
 
   if (!validate(packet)) { return; }
+
+  printSomeInfo(packet);
+
+  m_featuresExtractor.updateFromFlowStats(packet->flow->flowstats);
+
+  m_model.predict(m_featuresExtractor.getDataToPredict());
+
+  std::cout << "\n\n" << std::endl;
+
 
   // m_featuresExtractor.updatePayloadSize(packet->dsize);
   // m_featuresExtractor.updateAvgPacketLen(packet->pktlen, getPacketsCount());
