@@ -13,10 +13,13 @@ public:
   arma::mat getDataToPredict();
 
   void updateFromFlowStats(const snort::FlowStats &);
+  void printDataToPredict() const;
 
 private:
   double calcBytsAvg(const unsigned long &bytes, const unsigned long &packets);
   void updateFlowDuration(const snort::FlowStats &);
+  void updateFlowBytesSec();
+  void updateBytesAvg(const snort::FlowStats &flowStats);
 
   // forward (source to destination)
   // backward (destination to source)

@@ -22,6 +22,7 @@ public:
   void eval(snort::Packet *) override;
 
 private:
+  void resetFeatureExtractor();
   void printSomeInfo(snort::Packet *packet);
   void showConfig() const;
 

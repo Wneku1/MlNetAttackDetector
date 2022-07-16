@@ -54,6 +54,8 @@ std::string InspectorConf::getServerIp(const Packet *packet) const
 
 PegCount InspectorConf::getPacketsCount() const { return *m_module->get_counts(); }
 
+void InspectorConf::resetFeatureExtractor() { m_featuresExtractor = FeaturesExtractor(); }
+
 void InspectorConf::printSomeInfo(Packet *packet)
 {
   const auto clientIp{ getClientIp(packet) };
@@ -87,8 +89,10 @@ void InspectorConf::eval(Packet *packet)
 
   m_featuresExtractor.updateFromFlowStats(packet->flow->flowstats);
 
+  m_featuresExtractor.printDataToPredict();
   m_model.predict(m_featuresExtractor.getDataToPredict());
 
+  resetFeatureExtractor();
   std::cout << "\n\n" << std::endl;
 
 
