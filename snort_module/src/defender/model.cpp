@@ -18,7 +18,7 @@ void Model::load()
   mlpack::data::Load("/home/swnek/MlNetAttackDetector/snort_module/build/model.xml", "model", m_randomForest);
 }
 
-void Model::predict(const arma::mat &data)
+bool Model::predict(const arma::mat &data)
 {
   using namespace arma;
 
@@ -28,4 +28,5 @@ void Model::predict(const arma::mat &data)
   const auto result = predictions.at(0);
   std::cout << "\nClassification result: " << result << " , Probabilities: " << probabilities.at(0) << "/"
             << probabilities.at(1) << std::endl;
+  return static_cast<bool>(result);
 }

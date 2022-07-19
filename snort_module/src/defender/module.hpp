@@ -23,7 +23,11 @@ public:
   bool begin(const char *, int, snort::SnortConfig *) override;
   bool end(const char *, int, snort::SnortConfig *) override;
 
+  PegCount getTotalPacketCount() const;
+
   void incrementPacketCounter();
+  void incrementPredictedAttack();
+  void incrementPredictedNormal();
 
   std::shared_ptr<Config> get_config() const;
 

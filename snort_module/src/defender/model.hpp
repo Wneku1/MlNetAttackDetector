@@ -4,9 +4,9 @@
 class Model final
 {
 public:
-  Model();
+  explicit Model();
   ~Model();
 
   void load();
-  void predict(const arma::mat &data);
+  bool predict(const arma::mat &data);
 };

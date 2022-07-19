@@ -52,7 +52,7 @@ std::string InspectorConf::getServerIp(const Packet *packet) const
   return serverIp;
 }
 
-PegCount InspectorConf::getPacketsCount() const { return *m_module->get_counts(); }
+PegCount InspectorConf::getPacketsCount() const { return m_module->getTotalPacketCount(); }
 
 void InspectorConf::resetFeatureExtractor() { m_featuresExtractor = FeaturesExtractor(); }
 
@@ -93,7 +93,14 @@ void InspectorConf::eval(Packet *packet)
   m_featuresExtractor.update(m_packetLengthCollector);
 
   m_featuresExtractor.printDataToPredict();
-  m_model.predict(m_featuresExtractor.getDataToPredict());
+
+  auto isAttack = m_model.predict(m_featuresExtractor.getDataToPredict());
+
+  if (isAttack) {
+    m_module->incrementPredictedAttack();
+  } else {
+    m_module->incrementPredictedNormal();
+  }
 
   resetFeatureExtractor();
   std::cout << "\n\n" << std::endl;
