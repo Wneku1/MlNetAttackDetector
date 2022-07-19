@@ -1,9 +1,10 @@
 #pragma once
+#include "packet_length_collector.hpp"
 #include <mlpack/core/math/ccov.hpp>
 
 namespace snort {
 struct FlowStats;
-}
+}// namespace snort
 
 class FeaturesExtractor final
 {
@@ -12,11 +13,11 @@ public:
   ~FeaturesExtractor();
   arma::mat getDataToPredict();
 
-  void updateFromFlowStats(const snort::FlowStats &);
+  void update(const snort::FlowStats &);
+  void update(const PacketLengthCollector &);
   void printDataToPredict() const;
 
 private:
-  double calcBytsAvg(const unsigned long &bytes, const unsigned long &packets);
   void updateFlowDuration(const snort::FlowStats &);
   void updateFlowBytesSec();
   void updateBytesAvg(const snort::FlowStats &flowStats);

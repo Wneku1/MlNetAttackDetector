@@ -1,5 +1,6 @@
 #include "featuresExtractor.hpp"
 #include "snort/flow/flow.h"
+#include "utils.hpp"
 #include <chrono>
 #include <ctime>
 
@@ -86,19 +87,6 @@ arma::mat FeaturesExtractor::getDataToPredict()
     m_idle_mean };// 0.0,
 }
 
-double FeaturesExtractor::calcBytsAvg(const unsigned long &bytes, const unsigned long &packets)
-{
-  double bytesAvg{};
-
-  if (packets > 0U) {
-    bytesAvg = static_cast<double>(bytes) / static_cast<double>(packets);
-  } else {
-    bytesAvg = 0.0;
-  }
-
-  return bytesAvg;
-}
-
 void FeaturesExtractor::updateFlowDuration(const snort::FlowStats &flowStats)
 {
   time_t now = time(nullptr);
@@ -124,15 +112,24 @@ void FeaturesExtractor::updateBytesAvg(const snort::FlowStats &flowStats)
   const auto &serverPkts = flowStats.server_pkts;
 
   m_tot_fwd_pkts = serverPkts;
-  m_fwd_byts_avg = calcBytsAvg(serverBytes, serverPkts);
+  m_fwd_byts_avg = average<double>(serverBytes, serverPkts);
 
   m_tot_bwd_pkts = clientPkts;
-  m_bwd_byts_avg = calcBytsAvg(clientBytes, clientPkts);
+  m_bwd_byts_avg = average<double>(clientBytes, clientPkts);
 }
 
-void FeaturesExtractor::updateFromFlowStats(const snort::FlowStats &flowStats)
+void FeaturesExtractor::update(const snort::FlowStats &flowStats)
 {
   updateFlowDuration(flowStats);
   updateBytesAvg(flowStats);
   updateFlowBytesSec();
+}
+
+void FeaturesExtractor::update(const PacketLengthCollector &packetLengthCollector)
+{
+  m_tot_len_fwd_pkts = packetLengthCollector.m_tot_len_fwd_pkts;
+  m_tot_len_bwd_pkts = packetLengthCollector.m_tot_len_bwd_pkts;
+  m_fwd_pkt_len_mean = packetLengthCollector.m_fwd_pkt_len_mean;
+  m_bwd_pkt_len_mean = packetLengthCollector.m_bwd_pkt_len_mean;
+  m_pkt_len_mean = packetLengthCollector.m_pkt_len_mean;
 }

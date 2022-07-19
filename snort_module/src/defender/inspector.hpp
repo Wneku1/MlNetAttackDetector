@@ -5,6 +5,7 @@
 
 #include "featuresExtractor.hpp"
 #include "model.hpp"
+#include "packet_length_collector.hpp"
 #include <detection/detection_engine.h>
 #include <snort/framework/counts.h>
 
@@ -32,6 +33,7 @@ private:
   bool validate(const snort::Packet *packet) const;
 
   FeaturesExtractor m_featuresExtractor;
+  PacketLengthCollector m_packetLengthCollector{};
   Model m_model;
   std::shared_ptr<Config> m_config;
   Defender::ModuleConf *m_module{ nullptr };

@@ -87,7 +87,10 @@ void InspectorConf::eval(Packet *packet)
 
   printSomeInfo(packet);
 
-  m_featuresExtractor.updateFromFlowStats(packet->flow->flowstats);
+  m_packetLengthCollector.update(packet, getPacketsCount());
+
+  m_featuresExtractor.update(packet->flow->flowstats);
+  m_featuresExtractor.update(m_packetLengthCollector);
 
   m_featuresExtractor.printDataToPredict();
   m_model.predict(m_featuresExtractor.getDataToPredict());

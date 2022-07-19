@@ -38,6 +38,9 @@ add_library (
     featuresExtractor.cpp
     model.hpp
     model.cpp
+    packet_length_collector.hpp
+    packet_length_collector.cpp
+    utils.hpp
 )
 
 set_target_properties (
