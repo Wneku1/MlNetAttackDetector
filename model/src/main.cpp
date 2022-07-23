@@ -6,6 +6,7 @@
 #include "mlpack/core/cv/metrics/recall.hpp"
 #include "mlpack/methods/decision_tree/random_dimension_select.hpp"
 #include "mlpack/methods/random_forest/random_forest.hpp"
+#include <filesystem>
 #include <iostream>
 
 using namespace arma;
@@ -13,7 +14,9 @@ using namespace mlpack;
 using namespace mlpack::tree;
 using namespace mlpack::cv;
 
-mat loadData(const std::string &path)
+using Model = RandomForest<GiniGain, RandomDimensionSelect>;
+
+mat loadData(const std::filesystem::path &path)
 {
   mat data;
   bool isLoaded = mlpack::data::Load(path, data);
@@ -23,60 +26,81 @@ mat loadData(const std::string &path)
 
 Row<size_t> convertToRow(mat data) { return conv_to<Row<size_t>>::from(data.row(data.n_rows - 1)); }
 
-void predict(const RandomForest<GiniGain, RandomDimensionSelect> &rf, const mat &data, const Row<size_t> &label)
+void predict(const Model &model, const mat &data, const Row<size_t> &label)
 {
-  Row<size_t> trainPredictions;
-  rf.Classify(data, trainPredictions);
-  const size_t correctTrain = arma::accu(trainPredictions == label);
+  Row<size_t> predictions;
+  model.Classify(data, predictions);
+  const size_t correctTrain = arma::accu(predictions == label);
   cout << "accuracy: " << (double(correctTrain) / double(label.n_elem)) << "\n";
 }
 
+void trainModel(const mat &dataTrain, const Row<size_t> &labelTrain, Model &model)
+{
+  constexpr size_t numClasses{ 9U };
+  constexpr size_t numTrees{ 100U };
+  constexpr size_t minimumLeafSize{ 4U };
+  constexpr double minimumGainSplit{ 1e-7 };
+  constexpr size_t maximumDepth{ 6U };
+
+  model = Model(dataTrain, labelTrain, numClasses, numTrees, minimumLeafSize, minimumGainSplit, maximumDepth);
+}
+
+void saveModel(const std::filesystem::path &pathToSave, const Model &model)
+{
+  if (!std::filesystem::exists(pathToSave)) { std::filesystem::create_directory(pathToSave); }
+
+  mlpack::data::Save(pathToSave / "model.xml", "model", model, false);
+
+  std::cout << "Model has been saved." << std::endl;
+}
+
+void loadModel(const std::filesystem::path &pathToModel, Model &model)
+{
+  bool isLoaded = mlpack::data::Load(pathToModel, "model", model);
+  assert(isLoaded);
+
+  std::cout << "Model has been loaded." << std::endl;
+}
+
+enum class Option : int { CreateSave, LoadPredict };
+
 int main(int argc, char *argv[])
 {
-  mat X_train{ loadData("X_train.csv") };
-  mat X_test{ loadData("X_test.csv") };
-  mat y_test{ loadData("y_test.csv") };
-  mat y_train{ loadData("y_train.csv") };
+  constexpr auto firstArgument{ 1U };
+  Option option{ static_cast<Option>(std::stoi(argv[firstArgument])) };
 
+  const std::filesystem::path pathToDatasets{ "../datasets" };
+  mat X_train{ loadData(pathToDatasets / "X_train.csv") };
+  mat y_train{ loadData(pathToDatasets / "y_train.csv") };
   Row<size_t> y_trainToModel{ convertToRow(y_train) };
-  Row<size_t> y_testToModel{ convertToRow(y_test) };
 
-  constexpr size_t numClasses{ 2U };
-  constexpr size_t minimumLeafSize{ 5U };
-  constexpr size_t numTrees{ 10U };
-  // RandomForest<GiniGain, RandomDimensionSelect> rf{ RandomForest<GiniGain, RandomDimensionSelect>(
-  //   X_train, y_trainToModel, numClasses, numTrees, minimumLeafSize) };
-  RandomForest<GiniGain, RandomDimensionSelect> rf;
+  Model model;
 
-  mlpack::data::Load("mymodel.xml", "model", rf);
+  switch (option) {
+  case Option::CreateSave: {
+    const std::filesystem::path pathToSaveModel{ "../output" };
+    trainModel(X_train, y_trainToModel, model);
+    saveModel(pathToSaveModel, model);
+    break;
+  }
+  case Option::LoadPredict: {
+    const std::filesystem::path pathToModel{ "../output/model.xml" };
+    loadModel(pathToModel, model);
+    break;
+  }
+  default:
+    return 0;
+  }
 
   cout << "\nTraining ";
-  predict(rf, X_train, y_trainToModel);
+  predict(model, X_train, y_trainToModel);
+
+  mat X_test{ loadData(pathToDatasets / "X_test.csv") };
+  mat y_test{ loadData(pathToDatasets / "y_test.csv") };
+  Row<size_t> y_testToModel{ convertToRow(y_test) };
 
   cout << "\nTest ";
-  predict(rf, X_train, y_trainToModel);
-
-  // mlpack::data::Save("mymodel.xml", "model", rf, false);
-
-
-  // mat allDataset{ loadData("allDatasetToTest.csv") };
-  // mat allLabels{ loadData("allDatasetLabels.csv") };
-  // Row<size_t> labelsAllDataset{ convertToRow(allLabels) };
-
-  // cout << "\nAll dataset ";
-  // predict(rf, allDataset, labelsAllDataset);
-
-  //   Row<size_t> predictions;
-  // rf.Classify(dataset, predictions);
-  // const size_t correct = arma::accu(predictions == labels);
-  // cout << "\nTraining Accuracy: " << (double(correct) / double(labels.n_elem));
-
-  // mat sample("2 12 2 13 1 2 2 1 3 24 3 1 1 1 1 1 0 1 0 1 0 0 0");
-  // mat probabilities;
-  // rf.Classify(sample, predictions, probabilities);
-  // u64 result = predictions.at(0);
-  // cout << "\nClassification result: " << result << " , Probabilities: " <<
-  //     probabilities.at(0) << "/" << probabilities.at(1);
+  predict(model, X_test, y_testToModel);
 
   return 0;
 }
