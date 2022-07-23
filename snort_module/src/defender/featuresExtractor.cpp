@@ -10,7 +10,7 @@ FeaturesExtractor::~FeaturesExtractor() = default;
 
 void FeaturesExtractor::printDataToPredict() const
 {
-  std::cout << "m_flow_duration: " << m_flow_duration << std::endl;// Duration of the flow in Microsecond!!! TO DO
+  std::cout << "m_flow_duration: " << static_cast<long long>(m_flow_duration) << std::endl;
   std::cout << "m_tot_fwd_pkts: " << m_tot_fwd_pkts << std::endl;
   std::cout << "m_tot_bwd_pkts: " << m_tot_bwd_pkts << std::endl;
   std::cout << "m_tot_len_fwd_pkts: " << m_tot_len_fwd_pkts << std::endl;
@@ -73,10 +73,19 @@ arma::mat FeaturesExtractor::getDataToPredict()
   };
 }
 
+static long long convert_to_microseconds(const timeval &timeval)
+{
+  long long microseconds{};
+  microseconds += timeval.tv_sec * 1000000;
+  microseconds += timeval.tv_usec;
+  return microseconds;
+}
+
 void FeaturesExtractor::updateFlowDuration(const snort::FlowStats &flowStats)
 {
-  time_t now = time(nullptr);
-  m_flow_duration = now - flowStats.start_time.tv_sec;
+  using namespace std::chrono;
+  const auto microsec_since_epoch = duration_cast<microseconds>(system_clock::now().time_since_epoch());
+  m_flow_duration = microsec_since_epoch.count() - convert_to_microseconds(flowStats.start_time);
 }
 
 void FeaturesExtractor::updateFlowBytesSec()
