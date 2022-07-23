@@ -66,12 +66,15 @@ enum class Option : int { CreateSave, LoadPredict };
 
 int main(int argc, char *argv[])
 {
-  constexpr auto firstArgument{ 1U };
-  Option option{ static_cast<Option>(std::stoi(argv[firstArgument])) };
+  constexpr auto argOption{ 1U };
+  constexpr auto argXdata{ 2U };
+  constexpr auto argyData{ 3U };
+
+  Option option{ static_cast<Option>(std::stoi(argv[argOption])) };
 
   const std::filesystem::path pathToDatasets{ "../datasets" };
-  mat X_train{ loadData(pathToDatasets / "X_train.csv") };
-  mat y_train{ loadData(pathToDatasets / "y_train.csv") };
+  mat X_train{ loadData(pathToDatasets / argv[argXdata]) };
+  mat y_train{ loadData(pathToDatasets / argv[argyData]) };
   Row<size_t> y_trainToModel{ convertToRow(y_train) };
 
   Model model;
