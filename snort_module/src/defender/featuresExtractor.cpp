@@ -10,7 +10,7 @@ FeaturesExtractor::~FeaturesExtractor() = default;
 
 void FeaturesExtractor::printDataToPredict() const
 {
-  std::cout << "m_flow_duration: " << m_flow_duration << std::endl;
+  std::cout << "m_flow_duration: " << m_flow_duration << std::endl;// Duration of the flow in Microsecond!!! TO DO
   std::cout << "m_tot_fwd_pkts: " << m_tot_fwd_pkts << std::endl;
   std::cout << "m_tot_bwd_pkts: " << m_tot_bwd_pkts << std::endl;
   std::cout << "m_tot_len_fwd_pkts: " << m_tot_len_fwd_pkts << std::endl;
@@ -18,15 +18,7 @@ void FeaturesExtractor::printDataToPredict() const
   std::cout << "m_fwd_pkt_len_mean: " << m_fwd_pkt_len_mean << std::endl;
   std::cout << "m_bwd_pkt_len_mean: " << m_bwd_pkt_len_mean << std::endl;
   std::cout << "m_flow_byts: " << m_flow_byts << std::endl;
-  std::cout << "m_fwd_iat_mean: " << m_fwd_iat_mean << std::endl;
-  std::cout << "m_bwd_iat_mean: " << m_bwd_iat_mean << std::endl;
-  std::cout << "m_flow_iat_mean: " << m_flow_iat_mean << std::endl;
   std::cout << "m_pkt_len_mean: " << m_pkt_len_mean << std::endl;
-  std::cout << "m_pkt_size_avg: " << m_pkt_size_avg << std::endl;
-  std::cout << "m_fwd_byts_avg: " << m_fwd_byts_avg << std::endl;
-  std::cout << "m_bwd_byts_avg: " << m_bwd_byts_avg << std::endl;
-  std::cout << "m_active_mean: " << m_active_mean << std::endl;
-  std::cout << "m_idle_mean: " << m_idle_mean << std::endl;
 }
 
 arma::mat FeaturesExtractor::getDataToPredict()
@@ -68,7 +60,8 @@ arma::mat FeaturesExtractor::getDataToPredict()
   //   0.0 };
   // // 1 - Attack
 
-  return { m_flow_duration,// v 2458008.0,
+  return {
+    m_flow_duration,// v 2458008.0,
     m_tot_fwd_pkts,// v  8.0,
     m_tot_bwd_pkts,// v 7.0,
     m_tot_len_fwd_pkts,// 1148.0,
@@ -76,15 +69,8 @@ arma::mat FeaturesExtractor::getDataToPredict()
     m_fwd_pkt_len_mean,// 143.5,
     m_bwd_pkt_len_mean,// 225.8571428571,
     m_flow_byts,// v 1110.2486240891,
-    m_fwd_iat_mean,// 175572.0,
-    m_bwd_iat_mean,// 351144.0,
-    m_flow_iat_mean,// 369637.833333333,
-    m_pkt_len_mean,// 170.5625,
-    m_pkt_size_avg,// 181.9333333333,
-    m_fwd_byts_avg,// v 0.0,
-    m_bwd_byts_avg,// v 0.0,
-    m_active_mean,// 0.0,
-    m_idle_mean };// 0.0,
+    m_pkt_len_mean// 170.5625,
+  };
 }
 
 void FeaturesExtractor::updateFlowDuration(const snort::FlowStats &flowStats)
@@ -112,10 +98,8 @@ void FeaturesExtractor::updateBytesAvg(const snort::FlowStats &flowStats)
   const auto &serverPkts = flowStats.server_pkts;
 
   m_tot_fwd_pkts = serverPkts;
-  m_fwd_byts_avg = average<double>(serverBytes, serverPkts);
 
   m_tot_bwd_pkts = clientPkts;
-  m_bwd_byts_avg = average<double>(clientBytes, clientPkts);
 }
 
 void FeaturesExtractor::update(const snort::FlowStats &flowStats)
